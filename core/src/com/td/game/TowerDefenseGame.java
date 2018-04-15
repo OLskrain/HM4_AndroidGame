@@ -14,6 +14,7 @@ public class TowerDefenseGame extends ApplicationAdapter {
 	Monster monster2;
 	TextureAtlas atlas;
 
+
 	// 1. Разбор кода
 	// 2. При нажатии кнопки на карте, в то место должна переместиться пушка
 	// ее можно ставить только на землю
@@ -28,8 +29,8 @@ public class TowerDefenseGame extends ApplicationAdapter {
 		atlas = new TextureAtlas(Gdx.files.internal("game.pack"));
 		map = new Map(atlas);
 
-		monster1 = new Monster(atlas, map, 0);
-		monster2 = new Monster(atlas, map, 1);
+		monster1 = new Monster(atlas, map, 0);//монстр идет по 0-му маршруту
+		monster2 = new Monster(atlas, map, 1);//по первому маршруту
 	}
 
 	@Override
