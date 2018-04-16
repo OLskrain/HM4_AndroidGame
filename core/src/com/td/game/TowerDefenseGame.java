@@ -7,12 +7,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TowerDefenseGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Map map;
 	Monster monster1;
 	Monster monster2;
+	ArrayList<Monster> monsterList;
 	TextureAtlas atlas;
+	Turret turret;
 
 
 	// 1. Разбор кода
@@ -28,9 +33,13 @@ public class TowerDefenseGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		atlas = new TextureAtlas(Gdx.files.internal("game.pack"));
 		map = new Map(atlas);
+		monsterList = new ArrayList<Monster>();
 
 		monster1 = new Monster(atlas, map, 0);//монстр идет по 0-му маршруту
 		monster2 = new Monster(atlas, map, 1);//по первому маршруту
+		monsterList.add(monster1);
+		monsterList.add(monster2);
+		turret = new Turret(atlas, map,monsterList, -40 , -40);
 	}
 
 	@Override
@@ -43,12 +52,14 @@ public class TowerDefenseGame extends ApplicationAdapter {
 		map.render(batch);
 		monster1.render(batch);
 		monster2.render(batch);
+		turret.render(batch);
 		batch.end();
 	}
 
 	public void update(float dt) {
 		monster1.update(dt);
 		monster2.update(dt);
+		turret.update(dt);
 	}
 	
 	@Override

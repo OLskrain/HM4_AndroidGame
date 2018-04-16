@@ -12,14 +12,22 @@ public class Monster {
     private Vector2 position;
     private Vector2 velocity;
     private float speed;
+    private int healthMonster;
+    private boolean isDead;
     private Map.Route route; // есть ссылка на маршрут(routes). они все ссылаються на один и тот же маршрут
     private int routeCounter; // монстр знает сколько раз он повернул
     private int lastCellX, lastCellY; //где он повернул. та ячейка на которой мы впоследний раз повернули, чтобы 2 раза на 1-ой месте не поворачиваться
+
+    public Vector2 getPosition() {
+        return position;
+    }
 
     public Monster(TextureAtlas atlas, Map map, int routeIndex) { //мы говорим что у тебя есть карта и ты стоиш на n-ом маршруте
         this.map = map;
         this.texture = atlas.findRegion("monster");//в случае с атласом. все они ссылаються на одну текстуру
         this.speed = 100.0f;
+        this.healthMonster = 3;
+        this.isDead = false;
         this.route = map.getRoutes().get(routeIndex);//наш текуший маршрут равен.запросим у карты маршрут с номером route.запоминаем маршрут
         this.position = new Vector2(route.getStartX() * 80 + 40, route.getStartY() * 80 + 40);//когда мы узнали нашу клетку мы запрашиваем начальную точку. + 40, чтобы встать в центр клетке
         this.lastCellX = route.getStartX();//последняя ячейка на которой мы повернулись это наша стартовая позиция. потом эти переменные будут меняться
@@ -34,6 +42,11 @@ public class Monster {
     }
 
     public void update(float dt) {
+        if(isdeadMonster(0)){
+            position.set( -40 , -40);
+            velocity.set(0,0);
+        }
+
         position.mulAdd(velocity, dt);
 
         int cx = (int) (position.x / 80);//постоянно проверяем на какой клетке мы находимся
@@ -43,6 +56,7 @@ public class Monster {
         float dy =  Math.abs(cy * 80 + 40 - position.y);
         //если мы на развилке и растояние между ним и центром клетки меньше чем его удвоенная скорость, то тогда мы считаем что мы вошли в центр клетки
         //если это проверки не сделать, есть вероятность что монст проскочить перекресток.
+
         if (map.isCrossroad(cx, cy) && Vector2.dst(0, 0, dx, dy) < velocity.len() * dt * 2) {//проверяем дошли ли мы донтра точки
             if (!(lastCellX == cx && lastCellY == cy)) {//если дошли то проверяем а поворачивали мы на ней или нет
                 position.set(cx * 80 + 40, cy * 80 + 40);//если мы еще не были на этой точке, то цинтрируемся на ней
@@ -57,5 +71,12 @@ public class Monster {
                 velocity.set(route.getDirections()[routeCounter].x * speed, route.getDirections()[routeCounter].y * speed);
             }
         }
+    }
+    public boolean isdeadMonster(int shot){
+        healthMonster -= shot;
+        if(healthMonster <= 0) {
+            isDead = true;
+        }
+        return isDead;
     }
 }

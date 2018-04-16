@@ -132,4 +132,7 @@ public class Map {
     public boolean isCrossroad(int cx, int cy) { //метод проверки являеться ли точка перекрестком
         return data[cx][cy] == 2; // если в клетке "2" то это развилка
     }
+    public boolean isGrass(int cx, int cy){
+        return data[cx][cy] == 0;
+    }
 }
